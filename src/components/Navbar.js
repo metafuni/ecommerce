@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
     counter: {
         margin: '0 0 .75rem .1rem',
         fontSize: '.75rem',
-        color: '#bbdefb',
     },
 }));
 

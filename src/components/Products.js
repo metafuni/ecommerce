@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Loading from './Loading';
 
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -16,6 +17,8 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { indigo, deepOrange, grey, green } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import { useStateValue } from '../StateProvider';
 
 const useStyles = makeStyles((theme) => ({
     card: {
@@ -70,71 +73,94 @@ function Products() {
     const classes = useStyles();
 
     const [products, setProducts] = useState();
+    const [loading, setLoading] = useState(true);
     const [expanded, setExpanded] = useState(false);
+    const [{ basket }, dispatch] = useStateValue();
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
 
+    const addToBasket = (item) => {
+        dispatch({
+            type: 'ADD_TO_BASKET',
+            item: {
+                id: item.id,
+                title: item.title,
+                img: item.image,
+                price: item.price,
+                description: item.description
+            }
+        });
+    };
+
     useEffect(() => {
         fetch('https://fakestoreapi.com/products')
             .then(res => res.json())
-            .then(data => setProducts(data));
+            .then(data => {
+                setProducts(data);
+                setLoading(false);
+            });
     }, []);
 
+    useEffect(() => { console.log(basket) }, [basket]);
+
     return (
-        <div className={classes.gridcontainer} width={8 / 10}>
-            <Grid container className={classes.container}>
-                {products && products.map(el => (
-                    <Card className={classes.card} key={el.id} item>
-                        <CardHeader
-                            avatar={
-                                <Avatar aria-label="category" className={
-                                    el.category === 'men clothing' ? classes.avatarMC :
-                                        el.category === 'women clothing' ? classes.avatarWC :
-                                            el.category === 'jewelery' ? classes.avatarJW :
-                                                el.category === 'electronics' ? classes.avatarEL : null
-                                }>
-                                    <DonutSmallIcon />
-                                </Avatar>
-                            }
-                            title={el.title}
-                            subheader={el.category}
-                        />
-                        <CardMedia className={classes.mediacontainer}>
-                            <img src={el.image} alt={el.title} className={classes.media} key={el.id} />
-                        </CardMedia>
-                        <CardContent>
-                            <Typography variant="h6" color="textSecondary" component="p" size="big">
-                                £ {el.price}
-                            </Typography>
-                        </CardContent>
-                        <CardActions disableSpacing>
-                            <Button variant="contained" color="primary" size="small">
-                                + add to basket
-                            </Button>
-                            <IconButton
-                                className={clsx(classes.expand, {
-                                    [classes.expandOpen]: expanded,
-                                })}
-                                onClick={handleExpandClick}
-                                aria-expanded={expanded}
-                                aria-label="more info"
-                            >
-                                <ExpandMoreIcon />
-                            </IconButton>
-                        </CardActions>
-                        <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <>
+            {loading && (<Loading />)}
+            <div className={classes.gridcontainer} width={8 / 10}>
+                <Grid container className={classes.container}>
+                    {products && products.map(el => (
+                        <Card className={classes.card} key={el.id} item>
+                            <CardHeader
+                                avatar={
+                                    <Avatar aria-label="category" className={
+                                        el.category === 'men clothing' ? classes.avatarMC :
+                                            el.category === 'women clothing' ? classes.avatarWC :
+                                                el.category === 'jewelery' ? classes.avatarJW :
+                                                    el.category === 'electronics' ? classes.avatarEL : null
+                                    }>
+                                        <DonutSmallIcon />
+                                    </Avatar>
+                                }
+                                title={el.title}
+                                subheader={el.category}
+                            />
+                            <CardMedia className={classes.mediacontainer}>
+                                <img src={el.image} alt={el.title} className={classes.media} key={el.id} />
+                            </CardMedia>
                             <CardContent>
-                                <Typography variant="body2" color="textSecondary" component="p">
-                                    {el.description}
+                                <Typography variant="h6" color="textSecondary" component="p" size="big">
+                                    £ {el.price}
                                 </Typography>
                             </CardContent>
-                        </Collapse>
-                    </Card>
-                ))}
-            </Grid>
-        </div>
+                            <CardActions disableSpacing>
+                                <Button variant="contained" color="primary" size="small" onClick={() => addToBasket(el)}>
+                                    + add to basket
+                            </Button>
+                                <IconButton
+                                    className={clsx(classes.expand, {
+                                        [classes.expandOpen]: expanded,
+                                    })}
+                                    onClick={handleExpandClick}
+                                    aria-expanded={expanded}
+                                    aria-label="more info"
+                                >
+                                    <ExpandMoreIcon />
+                                </IconButton>
+                            </CardActions>
+                            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                                <CardContent>
+                                    <Typography variant="body2" color="textSecondary" component="p">
+                                        {el.description}
+                                    </Typography>
+                                </CardContent>
+                            </Collapse>
+                        </Card>
+                    ))}
+                </Grid>
+            </div>
+        </>
     )
 }
 
