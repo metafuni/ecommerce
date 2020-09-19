@@ -2,12 +2,21 @@ export const initialState = {
     basket: []
 };
 
-export const getBasketTotal = (basket) => 
+export const getBasketTotal = (basket) =>
     basket?.reduce((amount, item) => item.price + amount, 0);
 
 const reducer = (state, action) => {
-    switch(action.type) {
+    switch (action.type) {
         case 'ADD_TO_BASKET':
+            for (let i = 0; i < state.basket.length; i++) {
+                if (state.basket[i].id === action.item.id) {
+                    state.basket[i].amount++;
+                    return {
+                        ...state,
+                        basket: [...state.basket]
+                    };
+                };
+            };
             return {
                 ...state,
                 basket: [...state.basket, action.item]
@@ -21,9 +30,9 @@ const reducer = (state, action) => {
             } else {
                 console.warn(`Can't remove item with id: ${action.id} as it is not in the basket`);
             }
-            return { 
-                ...state, 
-                basket: newBasket 
+            return {
+                ...state,
+                basket: newBasket
             };
             break;
         case 'ADD_ITEM':
@@ -38,7 +47,7 @@ const reducer = (state, action) => {
             break;
         case 'REMOVE_ITEM':
             break;
-        default: 
+        default:
             return state;
     }
 };

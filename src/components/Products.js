@@ -82,25 +82,39 @@ function Products() {
     };
 
     const addToBasket = (item) => {
-        for (let i = 0; i < basket.length; i ++) {
-            if (basket[i].id === item.id) {
-                dispatch({
-                    type: 'ADD_ITEM',
+            dispatch({
+                type: 'ADD_TO_BASKET',
+                item: {
                     id: item.id,
-                })
-            };
-        };
-        dispatch({
-            type: 'ADD_TO_BASKET',
-            item: {
-                id: item.id,
-                title: item.title,
-                img: item.image,
-                price: item.price,
-                description: item.description,
-                amount: item.amount
-            }
-        });
+                    title: item.title,
+                    img: item.image,
+                    price: item.price,
+                    description: item.description,
+                    amount: 1
+                }
+            });
+        
+            // for (let i = 0; i < basket.length; i ++) {
+            //     if (basket[i].id === item.id) {
+            //         dispatch({
+            //             type: 'ADD_ITEM',
+            //             id: item.id,
+            //         });
+            //         return;
+            //     } else {
+            //         dispatch({
+            //             type: 'ADD_TO_BASKET',
+            //             item: {
+            //                 id: item.id,
+            //                 title: item.title,
+            //                 img: item.image,
+            //                 price: item.price,
+            //                 description: item.description,
+            //                 amount: item.amount
+            //             }
+            //         });
+            //     };
+            // };
     };
 
     useEffect(() => {
