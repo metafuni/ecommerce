@@ -26,6 +26,18 @@ const reducer = (state, action) => {
                 basket: newBasket 
             };
             break;
+        case 'ADD_ITEM':
+            let basketCopy = [...state.basket];
+            const itemIndex = state.basket.findIndex((basketItem) => basketItem.id === action.id);
+            basketCopy[itemIndex].amount++;
+            console.log(basketCopy[itemIndex])
+            return {
+                ...state,
+                basket: basketCopy
+            }
+            break;
+        case 'REMOVE_ITEM':
+            break;
         default: 
             return state;
     }

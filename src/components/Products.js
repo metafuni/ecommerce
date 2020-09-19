@@ -82,6 +82,14 @@ function Products() {
     };
 
     const addToBasket = (item) => {
+        for (let i = 0; i < basket.length; i ++) {
+            if (basket[i].id === item.id) {
+                dispatch({
+                    type: 'ADD_ITEM',
+                    id: item.id,
+                })
+            };
+        };
         dispatch({
             type: 'ADD_TO_BASKET',
             item: {
@@ -89,7 +97,8 @@ function Products() {
                 title: item.title,
                 img: item.image,
                 price: item.price,
-                description: item.description
+                description: item.description,
+                amount: item.amount
             }
         });
     };
@@ -100,8 +109,16 @@ function Products() {
             .then(data => {
                 setProducts(data);
                 setLoading(false);
-            });
+            });            
     }, []);
+
+    useEffect(() => {
+        if (products) {
+            products.forEach((item) => {
+                item.amount = 0;
+            });
+        };
+    }, [products]);
 
     useEffect(() => { console.log(basket) }, [basket]);
 
