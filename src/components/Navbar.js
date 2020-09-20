@@ -67,7 +67,7 @@ export default function Navbar() {
                     <Link to="/checkout" className={classes.link}>
                         <Button color="inherit">
                             <ShoppingCartIcon />
-                            <span className={classes.counter}>{basket?.length}</span>
+                            <span className={classes.counter}>{basket?.reduce((amount, item) => item.amount + amount, 0)}</span>
                         </Button>
                     </Link>
                 </Toolbar>

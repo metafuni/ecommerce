@@ -66,8 +66,20 @@ function Checkout() {
         })
     };
 
+    const deleteItem = (index) => {
+        dispatch({
+            type: 'REMOVE_ITEM',
+            id: index,
+        });
+        for (let i = 0; i < basket.length; i++) {
+            if (basket[i].id === index && basket[i].amount === 0) {
+                deleteFromBasket(index);
+            };
+        };
+    };
+
     const revealInfo = (item) => {
-        console.log(item);
+        // console.log(item);
     };
 
     useEffect(() => {
@@ -82,46 +94,46 @@ function Checkout() {
                 <DonutSmallIcon className={classes.icon} />
                 <span className={classes.headerText}>Shopping Basket</span>
             </h1>
-        <div className={classes.container}>
-        {basket?.length === 0 && (
-                <Typography variant="p" color="textSecondary" component="p" style={{ textAlign: 'center' }}>
-                    Your shopping basket is empty. Add items through the Shoppo shop first.
-                </Typography>
-            )}
-            {basket?.length > 0 && (
-                <Paper elevation={3} style={{ padding: ".75rem", maxWidth: 1000 }} >
-                    {basket.map(item => (
-                        <div className={classes.basketProduct} key={item.id}>
-                            <Paper elevation={1} style={{ width: 75, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                <img src={item.img} alt={item.title} className={classes.productImage} />
-                            </Paper>
-                            <h4 style={{maxWidth: 600}}>
-                                {item.title}<hr></hr>
-                                <p className={classes.infoBox}>{item.description}</p>
-                            </h4>
-                            <div>
-                            <Button variant="outlined" color="primary" size="small" onClick={() => deleteFromBasket(item.id)}>
-                                    x
+            <div className={classes.container}>
+                {basket?.length === 0 && (
+                    <Typography variant="p" color="textSecondary" component="p" style={{ textAlign: 'center' }}>
+                        Your shopping basket is empty. Add items through the Shoppo shop first.
+                    </Typography>
+                )}
+                {basket?.length > 0 && (
+                    <Paper elevation={3} style={{ padding: ".75rem", maxWidth: 1000 }} >
+                        {basket.map(item => (
+                            <div className={classes.basketProduct} key={item.id}>
+                                <Paper elevation={1} style={{ width: 75, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <img src={item.img} alt={item.title} className={classes.productImage} />
+                                </Paper>
+                                <h4 style={{ maxWidth: 600 }}>
+                                    {item.title}<small> ({item.amount}x)</small><hr></hr>
+                                    <p className={classes.infoBox}>{item.description}</p>
+                                </h4>
+                                <div>
+                                    <Button variant="outlined" color="primary" size="small" onClick={() => deleteFromBasket(item.id)}>
+                                        x
                             </Button>
-                                <Button variant="outlined" color="primary" size="small">
-                                    -
+                                    <Button variant="outlined" color="primary" size="small" onClick={() => deleteItem(item.id)}>
+                                        -
                                 </Button>
-                                <Button variant="outlined" color="primary" size="small" onClick={() => addItem(item.id)}>
-                                    +
+                                    <Button variant="outlined" color="primary" size="small" onClick={() => addItem(item.id)}>
+                                        +
                             </Button>
+                                </div>
+                                <Typography variant="h6" color="textSecondary" component="p">
+                                    £ {item.price}
+                                </Typography>
                             </div>
-                            <Typography variant="h6" color="textSecondary" component="p">
-                                £ {item.price}
-                            </Typography>
-                        </div>
-                    ))}
-                </Paper>
-            )}
+                        ))}
+                    </Paper>
+                )}
 
-            {basket?.length > 0 && (
-                <Subtotal />
-            )}
-        </div>
+                {basket?.length > 0 && (
+                    <Subtotal />
+                )}
+            </div>
         </div>
     )
 }

@@ -3,7 +3,7 @@ export const initialState = {
 };
 
 export const getBasketTotal = (basket) =>
-    basket?.reduce((amount, item) => item.price + amount, 0);
+    basket?.reduce((amount, item) => item.price*item.amount + amount, 0);
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -46,7 +46,15 @@ const reducer = (state, action) => {
             }
             break;
         case 'REMOVE_ITEM':
-            break;
+            let copiedBasket = [...state.basket];
+            const indexItem = state.basket.findIndex((basketItem) => basketItem.id === action.id);
+            copiedBasket[indexItem].amount--;
+            console.log(copiedBasket[indexItem])
+            return {
+                ...state,
+                basket: copiedBasket
+            }
+            break;        
         default:
             return state;
     }

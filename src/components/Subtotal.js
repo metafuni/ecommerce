@@ -32,7 +32,7 @@ function Subtotal() {
                     Subtotal
                 </Typography>
                 <Typography variant="p" color="textSecondary" component="p" style={{ textAlign: 'center' }}>
-                    {basket.length} items
+                    {basket?.reduce((amount, item) => item.amount + amount, 0)} items
                 </Typography>
                 {basket.map(item => (
                     <div className={classes.subtitleLine}>
@@ -40,7 +40,7 @@ function Subtotal() {
                             {item.title}
                         </Typography>
                         <Typography variant="subtitle2" component="subtitle2" className={classes.subtitle}>
-                            <span style={{textAlign: 'right'}}>1x</span> £ {item.price}
+                <span style={{textAlign: 'right'}}>{item.amount}x</span> £ {item.price}
                         </Typography><br></br>
                     </div>
                 ))}
@@ -49,7 +49,7 @@ function Subtotal() {
                     renderText={(value) => (
                         <>
                             <p>
-                                Subtotal ({basket.length} items) : <strong>{` ${value}`}</strong>
+                                Subtotal ({basket?.reduce((amount, item) => item.amount + amount, 0)} items) : <strong>{` ${value}`}</strong>
                             </p>
                         </>
                     )}
