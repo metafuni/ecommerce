@@ -112,18 +112,14 @@ function Products({ sort, filterValue }) {
         };
     }, [products]);
 
-    useEffect(() => {
-        switch (sort) {
-            case 'ascending':
-                products.sort((a, b) => (a.price < b.price) ? 1 : -1);
-                break;
-              case 'descending':
-                products.sort((a, b) => (a.price > b.price) ? 1 : -1);
-                break;
-        }
-    }, [sort]);
-
-    useEffect(() => {console.log(filterValue)});
+    switch (sort) {
+        case 'ascending':
+            products.sort((a, b) => (a.price < b.price) ? -1 : 1);
+            break;
+          case 'descending':
+            products.sort((a, b) => (a.price > b.price) ? -1 : 1);
+            break;
+    };
 
     return (
         <>

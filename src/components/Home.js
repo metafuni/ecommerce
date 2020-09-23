@@ -33,7 +33,8 @@ function Home() {
     const classes = useStyles();
     const [sort, setSort] = useState('');
     const [filterValue, setFilterValue] = useState('');
-    const handleChange = (e) => {
+
+    const changeSort = (e) => {
         setSort(e.target.value);
     };
 
@@ -56,7 +57,7 @@ function Home() {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={sort}
-                        onChange={handleChange}
+                        onChange={changeSort}
                     >
                         <MenuItem value={'ascending'}>price (low to high)</MenuItem>
                         <MenuItem value={'descending'}>price (high to low)</MenuItem>
