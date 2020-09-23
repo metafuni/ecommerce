@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Products from './Products';
 
 import Button from '@material-ui/core/Button';
@@ -32,18 +32,23 @@ function Home() {
 
     const classes = useStyles();
     const [sort, setSort] = useState('');
+    const [filterValue, setFilterValue] = useState('');
     const handleChange = (e) => {
         setSort(e.target.value);
+    };
+
+    const filterFunction = (e) => {
+        setFilterValue(e.target.innerText.toLowerCase())
     };
 
     return (
         <div>
             <div className={classes.root}>
                 <ButtonGroup color="primary" size="small" aria-label="outlined primary button group">
-                    <Button>Men Clothing</Button>
-                    <Button>Women Clothing</Button>
-                    <Button>Jewelry</Button>
-                    <Button>Electronics</Button>
+                    <Button onClick={filterFunction}>Men Clothing</Button>
+                    <Button onClick={filterFunction}>Women Clothing</Button>
+                    <Button onClick={filterFunction}>Jewelery</Button>
+                    <Button onClick={filterFunction}>Electronics</Button>
                 </ButtonGroup>
                 <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-label">sort by</InputLabel>
@@ -53,12 +58,12 @@ function Home() {
                         value={sort}
                         onChange={handleChange}
                     >
-                        <MenuItem value={'price (ascending)'}>price (low to high)</MenuItem>
-                        <MenuItem value={'price (descending)'}>price (high to low)</MenuItem>
+                        <MenuItem value={'ascending'}>price (low to high)</MenuItem>
+                        <MenuItem value={'descending'}>price (high to low)</MenuItem>
                     </Select>
                 </FormControl>
             </div>                
-                <Products />
+                <Products sort={sort} filterValue={filterValue} />
         </div>
     )
 };

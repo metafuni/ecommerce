@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function Products() {
+function Products({ sort, filterValue }) {
     const classes = useStyles();
 
     const [products, setProducts] = useState();
@@ -112,14 +112,75 @@ function Products() {
         };
     }, [products]);
 
-    useEffect(() => { console.log(basket) }, [basket]);
+    useEffect(() => {
+        switch (sort) {
+            case 'ascending':
+                products.sort((a, b) => (a.price < b.price) ? 1 : -1);
+                break;
+              case 'descending':
+                products.sort((a, b) => (a.price > b.price) ? 1 : -1);
+                break;
+        }
+    }, [sort]);
+
+    useEffect(() => {console.log(filterValue)});
 
     return (
         <>
             {loading && (<Loading />)}
             <div className={classes.gridcontainer} width={8 / 10}>
                 <Grid container className={classes.container}>
-                    {products && products.map(el => (
+                    {products && filterValue === '' && products.map(el => (
+                        <Card className={classes.card} key={el.id} item>
+                            <CardHeader
+                                avatar={
+                                    <Avatar aria-label="category" className={
+                                        el.category === 'men clothing' ? classes.avatarMC :
+                                            el.category === 'women clothing' ? classes.avatarWC :
+                                                el.category === 'jewelery' ? classes.avatarJW :
+                                                    el.category === 'electronics' ? classes.avatarEL : null
+                                    }>
+                                        <DonutSmallIcon />
+                                    </Avatar>
+                                }
+                                title={el.title}
+                                subheader={el.category}
+                            />
+                            <CardMedia className={classes.mediacontainer}>
+                                <img src={el.image} alt={el.title} className={classes.media} key={el.id} />
+                            </CardMedia>
+                            <CardContent>
+                                <Typography variant="h6" color="textSecondary" component="p" size="big">
+                                    £ {el.price}
+                                </Typography>
+                            </CardContent>
+                            <CardActions disableSpacing>
+                                <Button variant="contained" color="primary" size="small" onClick={() => addToBasket(el)}>
+                                    + add to basket
+                            </Button>
+                                <IconButton
+                                    className={clsx(classes.expand, {
+                                        [classes.expandOpen]: expanded,
+                                    })}
+                                    onClick={handleExpandClick}
+                                    aria-expanded={expanded}
+                                    aria-label="more info"
+                                >
+                                    <ExpandMoreIcon />
+                                </IconButton>
+                            </CardActions>
+                            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                                <CardContent>
+                                    <Typography variant="body2" color="textSecondary" component="p">
+                                        {el.description}
+                                    </Typography>
+                                </CardContent>
+                            </Collapse>
+                        </Card>
+                    ))}
+
+                    {/* TESTCODE */}
+                    {products && filterValue && products.filter(item => item.category === filterValue).map(el => (
                         <Card className={classes.card} key={el.id} item>
                             <CardHeader
                                 avatar={
